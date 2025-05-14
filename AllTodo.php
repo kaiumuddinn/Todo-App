@@ -57,12 +57,24 @@ $todos = mysqli_fetch_all($result, 1);
         align-items: center;
         justify-content: center;
     }
+
+    .deleteAll a {
+        text-decoration: none;
+        font-size: 20px;
+        padding: 10px 15px;
+        display: inline-block;
+        color: white;
+        background-color: #e83714;
+        border-radius: 5px;
+    }
 </style>
 
 <main>
     <section">
         <div class="container pb-4">
-            
+            <div class="deleteAll my-2 text-end">
+                <a href="./controller/DeleteTodo.php?deleteAll">Clear All</a>
+            </div>
             <div class="row gy-4">
 
                 <?php
@@ -75,7 +87,7 @@ $todos = mysqli_fetch_all($result, 1);
                                 <div class="icons d-flex justify-content-between gap-2">
                                     <a class="edit w-100 text-center bg-info" href="#"><i class="bi bi-pencil"></i></a>
                                     <a class="view w-100 text-center bg-black" href="#"><i class="bi bi-eye"></i></a>
-                                    <a class="delete w-100 text-center bg-danger" href="./controller/DeleteTodo.php?id=<?= $todo['id'] ?>"><i class="bi bi-trash"></i></a>
+                                    <a class="delete w-100 text-center bg-danger" href="./controller/DeleteTodo.php?id= <?= $todo['id'] ?> "><i class="bi bi-trash"></i></a>
                                 </div>
                             </div>
 
@@ -135,5 +147,31 @@ if (isset($_SESSION['success'])) { ?>
     </script>
 <?php
 }
-unset($_SESSION['success']);
+if (isset($_SESSION['deleted'])) {
+?>
+
+    <script>
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: "Deleted!",
+                    text: "Your task has been deleted.",
+                    icon: "success"
+                });
+            }
+        });
+    </script>
+
+
+<?php
+}
+session_unset();
 ?>
